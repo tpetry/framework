@@ -517,4 +517,14 @@ class PostgresGrammar extends Grammar
                         : "'$attribute'";
         }, $path);
     }
+
+    /**
+     * Get the grammar's database driver name.
+     *
+     * @return string
+     */
+    public function getDriverName()
+    {
+        return 'pgsql';
+    }
 }

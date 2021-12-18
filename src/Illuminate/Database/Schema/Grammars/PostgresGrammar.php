@@ -1034,4 +1034,14 @@ class PostgresGrammar extends Grammar
             return " generated always as ({$column->storedAs}) stored";
         }
     }
+
+    /**
+     * Get the grammar's database driver name.
+     *
+     * @return string
+     */
+    public function getDriverName()
+    {
+        return 'pgsql';
+    }
 }

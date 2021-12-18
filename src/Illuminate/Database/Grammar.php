@@ -256,4 +256,11 @@ abstract class Grammar
 
         return $this;
     }
+
+    /**
+     * Get the grammar's database driver name.
+     *
+     * @return string
+     */
+    abstract public function getDriverName();
 }

@@ -2556,7 +2556,7 @@ class DatabaseQueryBuilderTest extends TestCase
     {
         $builder = m::mock(Builder::class.'[where,exists,insert]', [
             m::mock(ConnectionInterface::class),
-            new Grammar,
+            $this->getGrammar(),
             m::mock(Processor::class),
         ]);
 
@@ -2568,7 +2568,7 @@ class DatabaseQueryBuilderTest extends TestCase
 
         $builder = m::mock(Builder::class.'[where,exists,update]', [
             m::mock(ConnectionInterface::class),
-            new Grammar,
+            $this->getGrammar(),
             m::mock(Processor::class),
         ]);
 
@@ -2584,7 +2584,7 @@ class DatabaseQueryBuilderTest extends TestCase
     {
         $builder = m::spy(Builder::class.'[where,exists,update]', [
             m::mock(ConnectionInterface::class),
-            new Grammar,
+            $this->getGrammar(),
             m::mock(Processor::class),
         ]);
 
@@ -4352,9 +4352,19 @@ SQL;
         return $connection;
     }
 
+    protected function getGrammar()
+    {
+        return new class extends Grammar {
+            public function getDriverName()
+            {
+                return 'tests';
+            }
+        };
+    }
+
     protected function getBuilder()
     {
-        $grammar = new Grammar;
+        $grammar = $this->getGrammar();
         $processor = m::mock(Processor::class);
 
         return new Builder($this->getConnection(), $grammar, $processor);
@@ -4407,7 +4417,7 @@ SQL;
     {
         return m::mock(Builder::class, [
             m::mock(ConnectionInterface::class),
-            new Grammar,
+            $this->getGrammar(),
             m::mock(Processor::class),
         ])->makePartial();
     }

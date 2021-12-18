@@ -529,4 +529,14 @@ class SqlServerGrammar extends Grammar
 
         return $table;
     }
+
+    /**
+     * Get the grammar's database driver name.
+     *
+     * @return string
+     */
+    public function getDriverName()
+    {
+        return 'sqlsrv';
+    }
 }

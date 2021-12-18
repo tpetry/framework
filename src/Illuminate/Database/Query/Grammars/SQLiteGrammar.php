@@ -339,4 +339,14 @@ class SQLiteGrammar extends Grammar
 
         return 'json_extract('.$field.$path.')';
     }
+
+    /**
+     * Get the grammar's database driver name.
+     *
+     * @return string
+     */
+    public function getDriverName()
+    {
+        return 'sqlite';
+    }
 }

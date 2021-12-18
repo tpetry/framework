@@ -931,4 +931,14 @@ class SqlServerGrammar extends Grammar
 
         return "N'$value'";
     }
+
+    /**
+     * Get the grammar's database driver name.
+     *
+     * @return string
+     */
+    public function getDriverName()
+    {
+        return 'sqlsrv';
+    }
 }
