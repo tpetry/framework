@@ -1768,7 +1768,7 @@ class DatabaseEloquentBuilderTest extends TestCase
         $processorClass = 'Illuminate\Database\Query\Processors\\'.$database.'Processor';
         $grammar = match ($grammarClass) {
             'Illuminate\Database\Query\Grammars\Grammar' => $this->getGrammar(),
-            default => new $grammarClass,
+            default => new $grammarClass(m::mock(ConnectionInterface::class)),
         };
         $processor = new $processorClass;
         $connection = m::mock(ConnectionInterface::class, ['getQueryGrammar' => $grammar, 'getPostProcessor' => $processor]);
@@ -1792,6 +1792,11 @@ class DatabaseEloquentBuilderTest extends TestCase
             public function getDriverName()
             {
                 return 'tests';
+            }
+
+            protected function quoteValue($value)
+            {
+                return "'{$value}'";
             }
         };
     }

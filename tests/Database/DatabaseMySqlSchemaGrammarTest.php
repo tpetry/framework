@@ -739,9 +739,14 @@ class DatabaseMySqlSchemaGrammarTest extends TestCase
 
     public function testAddingEnum()
     {
+        $connection = $this->getConnection();
+        $grammar = new MySqlGrammar($connection);
+
+        $connection->shouldReceive('quoteString')->andReturnUsing(fn ($value) => "'{$value}'");
+
         $blueprint = new Blueprint('users');
         $blueprint->enum('role', ['member', 'admin']);
-        $statements = $blueprint->toSql($this->getConnection(), $this->getGrammar());
+        $statements = $blueprint->toSql($connection, $grammar);
 
         $this->assertCount(1, $statements);
         $this->assertSame('alter table `users` add `role` enum(\'member\', \'admin\') not null', $statements[0]);
@@ -749,9 +754,14 @@ class DatabaseMySqlSchemaGrammarTest extends TestCase
 
     public function testAddingSet()
     {
+        $connection = $this->getConnection();
+        $grammar = new MySqlGrammar($connection);
+
+        $connection->shouldReceive('quoteString')->andReturnUsing(fn ($value) => "'{$value}'");
+
         $blueprint = new Blueprint('users');
         $blueprint->set('role', ['member', 'admin']);
-        $statements = $blueprint->toSql($this->getConnection(), $this->getGrammar());
+        $statements = $blueprint->toSql($connection, $grammar);
 
         $this->assertCount(1, $statements);
         $this->assertSame('alter table `users` add `role` set(\'member\', \'admin\') not null', $statements[0]);
@@ -1371,6 +1381,6 @@ class DatabaseMySqlSchemaGrammarTest extends TestCase
 
     public function getGrammar()
     {
-        return new MySqlGrammar;
+        return new MySqlGrammar($this->getConnection());
     }
 }

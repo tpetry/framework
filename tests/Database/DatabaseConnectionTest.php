@@ -457,6 +457,11 @@ class DatabaseConnectionTest extends TestCase
                     {
                         return 'tests';
                     }
+
+                    protected function quoteValue($value)
+                    {
+                        return "'{$value}'";
+                    }
                 };
             }
 
@@ -466,6 +471,11 @@ class DatabaseConnectionTest extends TestCase
                     public function getDriverName()
                     {
                         return 'tests';
+                    }
+
+                    protected function quoteValue($value)
+                    {
+                        return "'{$value}'";
                     }
                 };
             }

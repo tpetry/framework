@@ -1421,4 +1421,30 @@ abstract class Connection implements ConnectionInterface
     {
         return static::$resolvers[$driver] ?? null;
     }
+
+    /**
+     * Quote the given string literal.
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function quoteString($value)
+    {
+        $this->reconnectIfMissingConnection();
+
+        // Here we will run this query. If an exception occurs we'll determine if it was
+        // caused by a connection that has been lost. If that is the cause, we'll try
+        // to re-establish connection and re-run the query with a fresh connection.
+        try {
+            return $this->getPdo()->quote($value);
+        } catch (QueryException $e) {
+            if ($this->causedByLostConnection($e->getPrevious())) {
+                $this->reconnect();
+
+                return $this->getPdo()->quote($value);
+            }
+
+            throw $e;
+        }
+    }
 }

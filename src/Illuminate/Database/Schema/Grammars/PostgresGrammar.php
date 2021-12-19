@@ -2,11 +2,14 @@
 
 namespace Illuminate\Database\Schema\Grammars;
 
+use Illuminate\Database\Concerns\QuotesValue;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Fluent;
 
 class PostgresGrammar extends Grammar
 {
+    use QuotesValue;
+
     /**
      * If this Grammar supports schema changes wrapped in a transaction.
      *
@@ -34,6 +37,25 @@ class PostgresGrammar extends Grammar
      * @var string[]
      */
     protected $fluentCommands = ['Comment'];
+
+
+    /**
+     * The connection the grammar is operating for.
+     *
+     * @var \Illuminate\Database\Connection
+     */
+    protected $connection;
+
+    /**
+     * Create a new Postgres grammar instance.
+     *
+     * @param  \Illuminate\Database\Connection  $connection
+     * @return void
+     */
+    public function __construct($connection)
+    {
+        $this->connection = $connection;
+    }
 
     /**
      * Compile a create database command.

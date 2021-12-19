@@ -224,9 +224,14 @@ class DatabasePostgresSchemaGrammarTest extends TestCase
 
     public function testAddingPrimaryKey()
     {
+        $connection = $this->getConnection();
+        $grammar = new PostgresGrammar($connection);
+
+        $connection->shouldReceive('quoteValue')->andReturnUsing(fn ($value) => "'{$value}'");
+
         $blueprint = new Blueprint('users');
         $blueprint->primary('foo');
-        $statements = $blueprint->toSql($this->getConnection(), $this->getGrammar());
+        $statements = $blueprint->toSql($connection, $grammar);
 
         $this->assertCount(1, $statements);
         $this->assertSame('alter table "users" add primary key ("foo")', $statements[0]);
@@ -531,9 +536,14 @@ class DatabasePostgresSchemaGrammarTest extends TestCase
 
     public function testAddingEnum()
     {
+        $connection = $this->getConnection();
+        $grammar = new PostgresGrammar($connection);
+
+        $connection->shouldReceive('quoteString')->andReturnUsing(fn ($value) => "'{$value}'");
+
         $blueprint = new Blueprint('users');
         $blueprint->enum('role', ['member', 'admin']);
-        $statements = $blueprint->toSql($this->getConnection(), $this->getGrammar());
+        $statements = $blueprint->toSql($connection, $grammar);
 
         $this->assertCount(1, $statements);
         $this->assertSame('alter table "users" add column "role" varchar(255) check ("role" in (\'member\', \'admin\')) not null', $statements[0]);
@@ -1087,7 +1097,7 @@ class DatabasePostgresSchemaGrammarTest extends TestCase
 
     public function getGrammar()
     {
-        return new PostgresGrammar;
+        return new PostgresGrammar($this->getConnection());
     }
 
     public function testGrammarsAreMacroable()
