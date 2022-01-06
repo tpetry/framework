@@ -2191,7 +2191,7 @@ class DatabaseQueryBuilderTest extends TestCase
         }, 'post');
         $count = $builder->count();
         $this->assertEquals(1, $count);
-        $this->assertSame('(select "foo", "bar" from "posts" where "title" = ?) as "post"', $builder->columns[0]->getValue());
+        $this->assertSame('(select "foo", "bar" from "posts" where "title" = ?) as "post"', $builder->getGrammar()->getValue($builder->columns[0]));
         $this->assertEquals(['foo'], $builder->getBindings());
     }
 
