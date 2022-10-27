@@ -3004,16 +3004,8 @@ class DatabaseQueryBuilderTest extends TestCase
            ->updateFrom(['email' => 'foo', 'name' => 'bar']);
         $this->assertEquals(1, $result);
 
-
-
-
-
         $builder = $this->getPostgresBuilder();
         $builder->getConnection()->shouldReceive('update')->once()->with('update "users" set "email" = ?, "name" = ? from (select * from "orders" where "category" = ?) as "o" where "name" = ?', ['foo', 'bar', 'bax', 'baz'])->andReturn(1);
-
-
-
-
         $result = $builder->from('users')
             ->joinSub(fn ($query) => $query->from('orders')->where('category', 'bax'), 'o', fn ($query) => $query)
             ->where('name', 'baz')
