@@ -515,10 +515,10 @@ class PostgresGrammar extends Grammar
                 : $value;
         })->all();
 
-        $bindingsWithoutJoin = Arr::except($bindings, ['join']);
+        $bindingsWithoutWhere = Arr::except($bindings, ['select', 'where']);
 
         return array_values(
-            array_merge($values, $bindings['join'], Arr::flatten($bindingsWithoutJoin))
+            array_merge($values, $bindings['where'], Arr::flatten($bindingsWithoutWhere))
         );
     }
 
