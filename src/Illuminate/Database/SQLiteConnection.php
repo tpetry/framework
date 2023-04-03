@@ -118,4 +118,30 @@ class SQLiteConnection extends Connection
     {
         return $this->getConfig('foreign_key_constraints');
     }
+
+    /**
+     * Escapes a binary value for safe SQL embedding.
+     *
+     * @param string $value
+     * @return string
+     */
+    protected function escapeBinary($value)
+    {
+        $hex = bin2hex($value);
+
+        return "x'{$hex}'";
+    }
+
+    /**
+     * Escapes a string value for safe SQL embedding.
+     *
+     * @param string $value
+     * @return string
+     */
+    protected function escapeString($value)
+    {
+        // TODO null byte
+
+        return $this->getPdo()->quote($value);
+    }
 }

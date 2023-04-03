@@ -83,4 +83,41 @@ class PostgresConnection extends Connection
     {
         return new PostgresDriver;
     }
+
+    /**
+     * Escapes a binary value for safe SQL embedding.
+     *
+     * @param string $value
+     * @return string
+     */
+    protected function escapeBinary($value)
+    {
+        $hex = bin2hex($value);
+
+        return "'\x{$hex}'::bytea";
+    }
+
+    /**
+     * Escapes a bool value for safe SQL embedding.
+     *
+     * @param bool $value
+     * @return string
+     */
+    protected function escapeBool($value)
+    {
+        return $value ? 'true' : 'false';
+    }
+
+    /**
+     * Escapes a string value for safe SQL embedding.
+     *
+     * @param string $value
+     * @return string
+     */
+    protected function escapeString($value)
+    {
+        // todo null byte
+
+        return $this->getPdo()->quote($value);
+    }
 }

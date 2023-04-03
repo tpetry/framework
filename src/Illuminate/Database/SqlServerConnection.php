@@ -126,4 +126,32 @@ class SqlServerConnection extends Connection
     {
         return new SqlServerDriver;
     }
+
+    /**
+     * Escapes a binary value for safe SQL embedding.
+     *
+     * @param string $value
+     * @return string
+     */
+    protected function escapeBinary($value)
+    {
+        $hex = bin2hex($value);
+
+        return "0x{$hex}";
+    }
+
+    /**
+     * Escapes a string value for safe SQL embedding.
+     *
+     * @param string $value
+     * @return string
+     */
+    protected function escapeString($value)
+    {
+        // '123\\000abc456'
+
+        // TODO null byte ?
+
+        return $this->getPdo()->quote($value);
+    }
 }
