@@ -1652,11 +1652,13 @@ class Connection implements ConnectionInterface
 
             // The documentation of PDO::quote states that it should be theoretically safe to use a quoted string within
             // a SQL query. While only being "theoretically" safe this behaviour is used within the PHP MySQL driver all
-            // the time as no real prepared statements are used because it is emulating prepares by default. All
-            // remaining known SQL injections are always some strange charset conversion tricks that start by using
-            // invalid UTF-8 sequences. But those attacks are fixed by setting the proper connection charset which is
-            // done by the standard Laravel configuration. To further secure the implementation we can scrub the value
-            // by checking for invalid UTF-8 sequences.
+            // the time as no real prepared statements are used because it is emulating prepares by default. So even the
+            // PHP core developers believes it to be secure. However, Laravel forces the PDO driver to use real prepared
+            // statements so the default mode is not active for Laravel applications.
+            // All SQL injections remaining when quoting values are always some strange charset conversion tricks that
+            // start by using invalid UTF-8 sequences. But those attacks are fixed by setting the proper connection
+            // charset which is done by the standard Laravel configuration. To further secure the implementation we can
+            // scrub the value by checking for invalid UTF-8 sequences.
             if (false === preg_match('//u', $value)) {
                 throw new RuntimeException('Strings with invalid UTF-8 byte sequences cannot be escaped.');
             }
