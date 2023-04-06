@@ -40,6 +40,12 @@ class EscapeTest extends DatabaseTestCase
         $this->assertSame('0', $this->app['db']->escape(false));
     }
 
+    public function testEscapeNull()
+    {
+        $this->assertSame('null', $this->app['db']->escape(null));
+        $this->assertSame('null', $this->app['db']->escape(null, true));
+    }
+
     public function testEscapeBinary()
     {
         $this->assertSame("x'dead00beef'", $this->app['db']->escape(hex2bin('dead00beef'), true));
@@ -50,6 +56,7 @@ class EscapeTest extends DatabaseTestCase
         $this->assertSame("'2147483647'", $this->app['db']->escape("2147483647"));
         $this->assertSame("'true'", $this->app['db']->escape("true"));
         $this->assertSame("'false'", $this->app['db']->escape("false"));
+        $this->assertSame("'null'", $this->app['db']->escape("null"));
         $this->assertSame("'Hello''World'", $this->app['db']->escape("Hello'World"));
     }
 

@@ -1626,13 +1626,15 @@ class Connection implements ConnectionInterface
     /**
      * Escapes a value for safe SQL embedding.
      *
-     * @param  string|float|int|bool  $value
+     * @param  string|float|int|bool|null  $value
      * @param  bool  $binary
      * @return string
      */
     public function escape($value, $binary = false)
     {
-        if ($binary) {
+        if ($value === null) {
+            return 'null';
+        } else if ($binary) {
             return $this->escapeBinary($value);
         } elseif (is_int($value) || is_float($value)) {
             return (string) $value;
