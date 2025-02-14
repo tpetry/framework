@@ -1,11 +1,6 @@
 name: facades
 
-on:
-  push:
-    branches:
-      - master
-      - '*.x'
-  workflow_dispatch:
+on: [push, pull_request]
 
 permissions:
   contents: write
