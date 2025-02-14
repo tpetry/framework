@@ -831,7 +831,7 @@ class PostgresGrammar extends Grammar
      *
      * @return string
      */
-    public function getDateFormat()
+    public function getDateFormat2()
     {
         return 'Y-m-d H:i:s.uP';
     }
