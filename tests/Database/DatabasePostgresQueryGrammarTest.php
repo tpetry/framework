@@ -2,7 +2,10 @@
 
 namespace Illuminate\Tests\Database;
 
+use DateTimeImmutable;
+use DateTimeZone;
 use Illuminate\Database\Connection;
+use Illuminate\Database\PostgresConnection;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Query\Grammars\PostgresGrammar;
 use Mockery as m;
@@ -71,5 +74,19 @@ class DatabasePostgresQueryGrammarTest extends TestCase
         $this->assertEquals([
             'truncate "users" restart identity cascade' => [],
         ], $postgres->compileTruncate($builder));
+    }
+
+    public function testDateTimeInterfaceIsSerializedAsTimestamptz()
+    {
+        $connection = m::mock(PostgresConnection::class)->makePartial();
+        $connection->useDefaultQueryGrammar();
+
+        $bindings = $connection->prepareBindings([
+            DateTimeImmutable::createFromFormat('Y-m-d H:i:s.u', '2016-04-29 23:01:57.820463', new DateTimeZone('Pacific/Tahiti')),
+        ]);
+
+        $this->assertEquals([
+            '2016-04-29 23:01:57.820463-10:00',
+        ], $bindings);
     }
 }
